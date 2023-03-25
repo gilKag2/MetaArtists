@@ -1,15 +1,36 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Outlet, useLocation, } from 'react-router-dom';
 import Header from './Header';
 
 const Layout = () => {
+  const mainRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!mainRef.current) return;
+
+
+
+    mainRef.current.style.minHeight = `${calculateMainElementHeight()}px`;
+
+  }, []);
+
+  const calculateMainElementHeight = () => {
+    const headerHeight = document.querySelector('header').offsetHeight;
+    const authFooterHeight = document.querySelector('footer').offsetHeight;
+    const mainHeight = window.innerHeight - headerHeight;
+    if (location.pathname.includes('/auth'))
+      return mainHeight - authFooterHeight;
+    return mainHeight;
+  };
+
   return (
-    <>
+    <div className='flex flex-col h-full bg-gradient-to-br from-indigo-300 to-slate-400'>
       <Header />
-      <main  >
+      <main ref={mainRef} className='flex flex-1 ' >
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 

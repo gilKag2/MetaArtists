@@ -1,6 +1,6 @@
 
-import express from 'express';
 import axios from 'axios';
+import express from 'express';
 const router = express.Router();
 
 const axiosClient = axios.create({
@@ -15,4 +15,4 @@ router.get('/', async (req, res) => {
   res.send({});
 });
 
-export { router as ShazamCoreApiRouter };
+export { router as SpotifyRouter };
