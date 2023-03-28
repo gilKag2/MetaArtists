@@ -9,10 +9,7 @@ const Layout = () => {
   useEffect(() => {
     if (!mainRef.current) return;
 
-
-
     mainRef.current.style.minHeight = `${calculateMainElementHeight()}px`;
-
   }, []);
 
   const calculateMainElementHeight = () => {
