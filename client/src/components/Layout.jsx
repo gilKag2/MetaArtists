@@ -14,10 +14,12 @@ const Layout = () => {
 
   const calculateMainElementHeight = () => {
     const headerHeight = document.querySelector('header').offsetHeight;
-    const authFooterHeight = document.querySelector('footer').offsetHeight;
+
     const mainHeight = window.innerHeight - headerHeight;
-    if (location.pathname.includes('/auth'))
+    if (location.pathname.includes('/auth')) {
+      const authFooterHeight = document.querySelector('footer').offsetHeight;
       return mainHeight - authFooterHeight;
+    }
     return mainHeight;
   };
 

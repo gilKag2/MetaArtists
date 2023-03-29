@@ -4,8 +4,8 @@ import { FacebookAuthButton, GoogleAuthButton, Input } from '../components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../api';
 
 
 const formSchema = object({
@@ -15,7 +15,7 @@ const formSchema = object({
 });
 
 const Register = () => {
-  const { register, handleSubmit, formState: { errors }, reset, setError } = useForm({
+  const { register, handleSubmit, formState: { errors }, resetField, setError } = useForm({
     resolver: yupResolver(formSchema)
   });
 
@@ -23,24 +23,22 @@ const Register = () => {
 
   const registerUserMutation = useMutation({
     mutationFn: async data => {
-      await axios.post('http://localhost:4000/auth/register', data);
+      await registerUser(data);
     },
     onSuccess: (data) => {
       console.log(data);
       navigate('/');
     },
-    onError: (err) => {
-      if (err.response?.status === 403) {
-        const fieldWithError = Object.keys(err.response.data)[ 0 ];
-        setError(fieldWithError, { type: 'exists', message: 'exists' }, { shouldFocus: true });
-      }
-    }
+    onError: (err) => handleRegisterError(err)
+
   });
 
-
-  const onSubmit = (data) => {
-    registerUserMutation.mutate(data);
-
+  const handleRegisterError = (err) => {
+    if (err.response?.status === 403) {
+      const fieldWithError = Object.keys(err.response.data)[ 0 ];
+      setError(fieldWithError, { type: 'exists', message: 'exists' }, { shouldFocus: true });
+      resetField(fieldWithError, { keepError: true });
+    }
   };
 
   const onFacebookClick = () => {
@@ -53,7 +51,7 @@ const Register = () => {
   return (
     <>
       <section className='flex flex-col justify-center items-center self-center h-full gap-6 mx-auto'>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 px-2 w-full">
+        <form onSubmit={handleSubmit((data) => registerUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
           <Input name="userName" errorMessage={errors.userName?.message} register={register("userName")} label="Username" />
           <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
           <Input name="password" errorMessage={errors.password?.message} register={register("password")} label="Password" type='password' />

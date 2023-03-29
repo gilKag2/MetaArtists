@@ -7,8 +7,6 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   const { userName, email, password } = req.body;
 
-  // const userWithSameUsername = await User.findOne({})
-
   try {
     const user = await User.create({
       userName,
@@ -16,11 +14,10 @@ router.post('/register', async (req, res) => {
       password
     });
     console.log(user);
-    res.sendStatus(200);
+    res.sendStatus(201);
   } catch (e) {
     if (e.code === 11000) {
       return res.status(403).send(e.keyValue);
-
     }
     res.status(400).send('failed to create user');
   }
@@ -29,14 +26,16 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
 
   const { email, password } = req.body;
-  // add user validation
+  if (!email || !password) {
+    return res.sendStatus(400);
+  }
 
   const user = await User.findOne({ email, password });
   console.log(user);
   if (user) {
-    res.json('logined');
+    res.status(202).send(user);
   } else {
-    res.json('no such user');
+    res.sendStatus(550); // send no such user error code.
   }
 });
 
