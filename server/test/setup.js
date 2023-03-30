@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 let mongo;
-console.log("here");
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
@@ -16,8 +15,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // jest.clearAllMocks();
-  if (mongoose.connection?.db?.collections) {
-
+  if (mongoose.connection?.db) {
     const collections = await mongoose.connection.db.collections();
     for (const collection of collections) {
       await collection.deleteMany({});

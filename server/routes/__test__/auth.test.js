@@ -3,8 +3,10 @@ import User from '../../mongodb/models/user';
 import request from 'supertest';
 
 
+
 describe('User Registration and Login', () => {
   let newUser;
+
   beforeEach(() => {
     newUser = {
       userName: 'testUser',
@@ -13,16 +15,20 @@ describe('User Registration and Login', () => {
     };
   });
 
+  const registerUser = async () => {
+    return await request(app)
+      .post('/auth/register')
+      .send(newUser)
+      .expect(201);
+  };
+
   describe('POST /register', () => {
     it('should create a new user', async () => {
-      const res = await request(app)
-        .post('/auth/register')
-        .send(newUser)
-        .expect(201);
+      const res = await registerUser();
 
       const createdUser = await User.findOne({ email: newUser.email });
       expect(createdUser.email).toBe(newUser.email);
-      expect(createdUser.password).toBe(newUser.password);
+      expect(createdUser.password).not.toBe(newUser.password); // make sure that the password is hashed
     });
 
     it('should not create a user with duplicate email', async () => {
@@ -37,12 +43,12 @@ describe('User Registration and Login', () => {
 
   describe('POST /login', () => {
     it('should login a user with valid credentials', async () => {
-      await User.create(newUser);
+      await registerUser();
 
       const res = await request(app)
         .post('/auth/login')
         .send({ email: newUser.email, password: newUser.password })
-        .expect(202);
+        .expect(200);
 
       expect(res.body.email).toBe(newUser.email);
       expect(res.body.password).not.toBe(newUser.password);
