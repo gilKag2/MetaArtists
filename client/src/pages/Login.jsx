@@ -3,10 +3,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { object, string } from 'yup';
-import { FacebookAuthButton, GoogleAuthButton, Input } from '../components';
+import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../components';
 import { loginUser } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
-import FacebookLogin from '';
 
 const formSchema = object({
   email: string().required().email("Please enter a valid email address"),
@@ -14,7 +13,6 @@ const formSchema = object({
 });
 
 const Login = () => {
-
   const { register, handleSubmit, formState: { errors }, resetField, setError } = useForm({
     resolver: yupResolver(formSchema)
   });
@@ -45,18 +43,16 @@ const Login = () => {
 
 
   return (
-    <section className='flex flex-col justify-center items-center self-center h-full gap-6 mx-auto'>
+    <section className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto'>
       <form onSubmit={handleSubmit((data) => loginUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
         <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
         <Input name="password" errorMessage={errors.password?.message} register={register("password")} label="Password" type='password' />
         <button disabled={loginUserMutation.isLoading} type="submit" className='w-full text-center bg-cyan-600 border-gray-300 border-2 text-white text-lg font-semibold rounded-md py-2'>Sign up</button>
       </form>
-      <div className='flex flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
-        <FacebookLogin
-
-        />
-        {/* <FacebookAuthButton isSignIn onClick={onFacebookClick} />
-        <GoogleAuthButton isSignIn onClick={onGoogleClick} /> */}
+      <OrSeperator />
+      <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
+        <GoogleAuthButton isSignIn onClick={onGoogleClick} />
+        <FacebookAuthButton isSignIn onClick={onFacebookClick} />
       </div>
     </section>
   );

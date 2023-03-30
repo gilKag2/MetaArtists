@@ -9,6 +9,9 @@ import { AuthLayout, Layout, NotFoundPage } from './components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+// import { config } from 'dotenv';
+
+// config();
 
 const queryclient = new QueryClient();
 

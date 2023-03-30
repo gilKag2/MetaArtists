@@ -4,5 +4,5 @@ import Input from "./auth/Input";
 import AuthLayout from "./AuthLayout";
 import Layout from "./Layout";
 import NotFoundPage from "./NotFoundPage";
-
-export { FacebookAuthButton, GoogleAuthButton, Input, AuthLayout, Layout, NotFoundPage };
+import OrSeperator from "./OrSeperator";
+export { FacebookAuthButton, GoogleAuthButton, Input, AuthLayout, Layout, NotFoundPage, OrSeperator };

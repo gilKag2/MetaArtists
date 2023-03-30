@@ -13,7 +13,6 @@ router.post('/register', async (req, res) => {
       email,
       password
     });
-    console.log(user);
     res.sendStatus(201);
   } catch (e) {
     if (e.code === 11000) {
@@ -30,12 +29,17 @@ router.post('/login', async (req, res) => {
     return res.sendStatus(400);
   }
 
-  const user = await User.findOne({ email, password });
-  console.log(user);
-  if (user) {
-    res.status(202).send(user);
-  } else {
-    res.sendStatus(550); // send no such user error code.
+  try {
+    const user = await User.findOne({ email, password });
+    console.log(user);
+
+    if (user) {
+      res.status(202).send(user);
+    } else {
+      res.sendStatus(550);
+    }
+  } catch (e) {
+    res.sendStatus(500);
   }
 });
 

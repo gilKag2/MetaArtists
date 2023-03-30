@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { FacebookAuthButton, GoogleAuthButton, Input } from '../components';
+import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useMutation } from '@tanstack/react-query';
@@ -50,16 +50,17 @@ const Register = () => {
 
   return (
     <>
-      <section className='flex flex-col justify-center items-center self-center h-full gap-6 mx-auto'>
+      <section className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto'>
         <form onSubmit={handleSubmit((data) => registerUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
           <Input name="userName" errorMessage={errors.userName?.message} register={register("userName")} label="Username" />
           <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
           <Input name="password" errorMessage={errors.password?.message} register={register("password")} label="Password" type='password' />
-          <button disabled={registerUserMutation.isLoading} type="submit" className='w-full text-center bg-cyan-600 border-gray-300 border-2 text-white text-lg font-semibold rounded-md py-2'>Sign up</button>
+          <button disabled={registerUserMutation.isLoading} type="submit" className='flex-1 h-full w-full text-center bg-cyan-600 border-gray-300 border-2 text-white text-lg font-semibold rounded-md py-2'>Sign up</button>
         </form>
-        <div className='flex flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
-          <FacebookAuthButton onClick={onFacebookClick} />
+        <OrSeperator />
+        <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
           <GoogleAuthButton onClick={onGoogleClick} />
+          <FacebookAuthButton onClick={onFacebookClick} />
         </div>
       </section>
     </>
