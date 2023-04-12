@@ -4,9 +4,8 @@ import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../com
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api';
-
+import useLogin from '../hooks/useLogin.js';
 
 const formSchema = object({
   userName: string().required().min(4, 'Username must be at least 4 characters').max(12, 'Username must be less then 12 characters'),
@@ -19,15 +18,15 @@ const Register = () => {
     resolver: yupResolver(formSchema)
   });
 
-  const navigate = useNavigate();
+  const login = useLogin();
 
   const registerUserMutation = useMutation({
     mutationFn: async data => {
-      await registerUser(data);
+      return await registerUser(data);
     },
-    onSuccess: (data) => {
-      console.log(data);
-      navigate('/');
+    onSuccess: (responseData) => {
+      const { status, data } = responseData;
+      login(data);
     },
     onError: (err) => handleRegisterError(err)
 

@@ -1,6 +1,8 @@
 import express from 'express';
 import User from '../mongodb/models/user.js';
-import bcrypt from 'bcrypt';
+import GoogleUser from '../mongodb/models/google-user.js';
+import jwt_decode from 'jwt-decode';
+import { convertUserObject, hashPassword, validateUserPassword } from '../utils/auth.js';
 
 const router = express.Router();
 
@@ -18,7 +20,7 @@ router.post('/register', async (req, res) => {
       email,
       password: hashedPassword
     });
-    res.sendStatus(201);
+    res.status(201).send(convertUserObject(user));
   } catch (e) {
     if (e.code === 11000) {
       return res.status(403).send(e.keyValue);
@@ -44,20 +46,40 @@ router.post('/login', async (req, res) => {
     if (!isSamePassword) {
       return res.sendStatus(401);
     }
-
-    res.send(user);
-
+    res.send(convertUserObject(user));
   } catch (e) {
     res.sendStatus(500);
   }
 });
 
-const validateUserPassword = async (password, hashedPassword) => {
-  return await bcrypt.compare(password, hashedPassword);
-};
 
-const hashPassword = async (password) => {
-  return await bcrypt.hash(password, 10);
-};
+router.post('/googleAuth', async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.sendStatus(400);
+  }
+
+  const userObject = jwt_decode(token);
+  try {
+    const existingUser = await GoogleUser.findOne({ googleId: userObject.sub });
+    if (existingUser) {
+      return res.status(200).send(convertUserObject(existingUser));
+    }
+
+    // if there is no user, create a new one
+    const user = await GoogleUser.create({
+      userName: userObject.name,
+      email: userObject.email,
+      googleId: userObject.sub
+    });
+    res.status(201).send(convertUserObject(user, true));
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+
+
+
 
 export default router;

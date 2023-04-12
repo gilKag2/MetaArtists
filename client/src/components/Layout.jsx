@@ -26,7 +26,7 @@ const Layout = () => {
   return (
     <div className='flex flex-col h-full bg-gradient-to-br from-indigo-300 to-slate-400'>
       <Header />
-      <main ref={mainRef} className='flex flex-1 ' >
+      <main ref={mainRef} className='flex flex-1 overflow-auto' >
         <Outlet />
       </main>
     </div>

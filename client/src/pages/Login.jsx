@@ -4,8 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { object, string } from 'yup';
 import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../components';
-import { loginUser } from '../api/auth';
-import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../api/auth.js';
+import useLogin from '../hooks/useLogin';
 
 const formSchema = object({
   email: string().required().email("Please enter a valid email address"),
@@ -17,15 +17,16 @@ const Login = () => {
     resolver: yupResolver(formSchema)
   });
 
-  const navigate = useNavigate();
+  const login = useLogin();
+
 
   const loginUserMutation = useMutation({
     mutationFn: async data => {
-      await loginUser(data);
+      return await loginUser(data);
     },
-    onSuccess: (data) => {
-      console.log(data);
-      navigate('/');
+    onSuccess: (responseData) => {
+      const { status, data } = responseData;
+      login(data);
     },
     onError: (err) => handleLoginError(err)
   });
@@ -47,7 +48,10 @@ const Login = () => {
       <form onSubmit={handleSubmit((data) => loginUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
         <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
         <Input name="password" errorMessage={errors.password?.message} register={register("password")} label="Password" type='password' />
-        <button disabled={loginUserMutation.isLoading} type="submit" className='w-full text-center bg-cyan-600 border-gray-300 border-2 text-white text-lg font-semibold rounded-md py-2'>Sign up</button>
+        <button disabled={loginUserMutation.isLoading} type="submit" className='w-full text-center bg-cyan-600 border-gray-300 border-2
+         text-white text-lg font-semibold rounded-md py-2'>
+          Login
+        </button>
       </form>
       <OrSeperator />
       <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>

@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import { getUser } from '../redux/features/user/userSlice';
+import SpinnerLoader from './SpinnerLoader';
+
+const UserMenu = lazy(() => import('./UserMenu'));
 
 const Header = () => {
+  const user = useSelector(getUser);
 
   const links = [
     { label: "Login", href: 'auth/login' },
@@ -15,12 +21,17 @@ const Header = () => {
   ));
 
   return (
-    <header className='flex w-full h-fit sm:h-1/6 justify-between items-center border-b-stone-400'>
+    <header className='flex w-full h-fit sm:h-1/6 justify-between items-center border-b-stone-400 mt-3'>
       <h1 className='ml-2 text-2xl font-semibold text-white'>
-        Artist's Song Generator
+        Meta Artists
       </h1>
       <ul className='flex flex-col gap-3 mr-4 sm:mr-16 sm:flex-row'>
-        {links}
+        {user ?
+          <Suspense fallback={<SpinnerLoader />}>
+            <UserMenu user={user} />
+          </Suspense> :
+          links
+        }
       </ul>
     </header>
   );
