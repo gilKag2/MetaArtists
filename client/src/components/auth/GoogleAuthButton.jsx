@@ -4,9 +4,10 @@ import { authWithGoogle } from '../../api/auth';
 import { useMutation } from '@tanstack/react-query';
 import useLogin from '../../hooks/useLogin.js';
 
-const GoogleAuthButton = () => {
+const GoogleAuthButton = ({ width }) => {
   const login = useLogin();
 
+  console.log(width);
   const googleAuthMutation = useMutation({
     mutationFn: async data => {
       return await authWithGoogle(data);
@@ -22,26 +23,27 @@ const GoogleAuthButton = () => {
     googleAuthMutation.mutate(credentialResponse.credential);
   };
 
+  const onGoogleError = (error) => {
+    console.log(error);
+    console.log('Login Failed');
+  };
+
+
 
   return (
-    // <button onClick={onClick} className="w-full bg-slate-50 border-gray-300 border-2 text-black text-lg font-semibold rounded-md flex items-center gap-2 py-2 px-4">
-    //   <img src={googleLogo} alt='google' className="h-5 w-5 object-fill" />
-    //   <span>{`Sign ${isSignIn ? 'in' : 'up'} with Google`}</span>
-    // </button>
-
-    <div className=''>
-      <GoogleLogin shape='circle' size='large'
+    <div className='w-full'>
+      <GoogleLogin
+        width={width}
+        shape='circle'
         theme='outline'
         cancel_on_tap_outside='true'
         context='use'
-        useOneTap='false'
         onSuccess={onGoogleSuccess}
-        onError={() => {
-          console.log('Login Failed');
-        }}
+        onError={onGoogleError}
       />
     </div>
   );
 };
+
 
 export default GoogleAuthButton;

@@ -49,7 +49,7 @@ const Register = () => {
 
   return (
     <>
-      <section className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto'>
+      <section id="register_form" className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto'>
         <form onSubmit={handleSubmit((data) => registerUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
           <Input name="userName" errorMessage={errors.userName?.message} register={register("userName")} label="Username" />
           <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
@@ -58,12 +58,18 @@ const Register = () => {
         </form>
         <OrSeperator />
         <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
-          <GoogleAuthButton onClick={onGoogleClick} />
+          <GoogleAuthButton width={getFormWidth()} onClick={onGoogleClick} />
           <FacebookAuthButton onClick={onFacebookClick} />
         </div>
       </section>
     </>
   );
 };
+
+const getFormWidth = () => {
+  const formWidth = document.getElementById("register_form")?.offsetWidth;
+  return formWidth > 0 ? formWidth : 250;
+};
+
 
 export default Register;

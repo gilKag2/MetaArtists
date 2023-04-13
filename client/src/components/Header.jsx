@@ -1,30 +1,38 @@
 import React, { lazy, Suspense } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUser } from '../redux/features/user/userSlice';
 import SpinnerLoader from './SpinnerLoader';
+import SearchBar from './SearchBar';
 
 const UserMenu = lazy(() => import('./UserMenu'));
 
 const Header = () => {
   const user = useSelector(getUser);
 
+  const navigate = useNavigate();
+
   const links = [
     { label: "Login", href: 'auth/login' },
     { label: "Register", href: 'auth/register' },
   ].map(link => (
-    <Link key={link.href} to={link.href}>
+    <Link key={link.href} to={link.href} className="text-white font-medium hover:text-gray-300 transition-colors duration-200">
       <li>
         {link.label}
       </li>
     </Link>
   ));
 
+  const onTitleClick = () => {
+    navigate('/');
+  };
+
   return (
-    <header className='flex w-full h-fit sm:h-1/6 justify-between items-center border-b-stone-400 mt-3'>
-      <h1 className='ml-2 text-2xl font-semibold text-white'>
+    <header className='flex w-full h-fit sm:h-1/6 justify-between items-center border-b-stone-400 mt-5'>
+      <h1 onClick={onTitleClick} className='hover:cursor-pointer ml-2 text-2xl text-white font-medium hover:text-gray-300 transition-colors duration-200'>
         Meta Artists
       </h1>
+      <SearchBar />
       <ul className='flex flex-col gap-3 mr-4 sm:mr-16 sm:flex-row'>
         {user ?
           <Suspense fallback={<SpinnerLoader />}>

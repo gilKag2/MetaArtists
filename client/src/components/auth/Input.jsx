@@ -5,7 +5,7 @@ const Input = ({ name, label, register, errorMessage, placeholder = '', type = '
     <div className='flex flex-col w-full gap-1 flex-1 h-full'>
       <div className='flex gap-2'>
         {label && (
-          <label htmlFor={name} className='text-black font-semibold text-base self-start ml-1'>{label}</label>
+          <label htmlFor={name} className='text-white font-semibold text-base self-start ml-1'>{label}</label>
         )}
         {errorMessage && <span className='text-red-600 self-start'>{errorMessage}</span>}
       </div>
