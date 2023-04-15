@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { AuthRouter } from './routes/index.js';
+import { AuthRouter, SpotifyRouter } from './routes/index.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/auth', AuthRouter);
-// app.use(SpotifyRouter);
+app.use('/spotify', SpotifyRouter);
 
 
 

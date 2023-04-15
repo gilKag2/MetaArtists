@@ -1,2 +1,4 @@
 import AuthRouter from "./auth.js";
-export { AuthRouter };
+import { SpotifyRouter } from "./spotify-router.js";
+
+export { AuthRouter, SpotifyRouter };

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../redux/features/user/userSlice';
+import useClickOutsideHandler from '../hooks/useClickOutsideHandler';
 
 const UserMenu = ({ user }) => {
   const [ isOpen, setIsOpen ] = useState(false);
@@ -10,6 +11,8 @@ const UserMenu = ({ user }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useClickOutsideHandler(menuRef, () => setIsOpen(false));
 
   const onMenuClick = () => {
     setIsOpen(prevIsOpen => !prevIsOpen);
@@ -20,19 +23,6 @@ const UserMenu = ({ user }) => {
     navigate('/auth/login');
   };
 
-
-  const handleDocumentClick = (event) => {
-    if (isOpen && menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleDocumentClick);
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, [ isOpen ]);
 
 
   const menuLinks = [

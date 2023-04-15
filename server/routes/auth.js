@@ -1,6 +1,5 @@
 import express from 'express';
 import User from '../mongodb/models/user.js';
-import GoogleUser from '../mongodb/models/google-user.js';
 import jwt_decode from 'jwt-decode';
 import { convertUserObject, hashPassword, validateUserPassword } from '../utils/auth.js';
 
@@ -58,16 +57,16 @@ router.post('/googleAuth', async (req, res) => {
   if (!token) {
     return res.sendStatus(400);
   }
-
   const userObject = jwt_decode(token);
+  console.log(userObject);
   try {
-    const existingUser = await GoogleUser.findOne({ googleId: userObject.sub });
+    const existingUser = await User.findOne({ email: userObject.email });
     if (existingUser) {
       return res.status(200).send(convertUserObject(existingUser));
     }
 
     // if there is no user, create a new one
-    const user = await GoogleUser.create({
+    const user = await User.create({
       userName: userObject.name,
       email: userObject.email,
       googleId: userObject.sub
@@ -77,9 +76,6 @@ router.post('/googleAuth', async (req, res) => {
     res.sendStatus(500);
   }
 });
-
-
-
 
 
 export default router;

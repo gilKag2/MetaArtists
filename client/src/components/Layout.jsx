@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, } from 'react-router-dom';
 import Header from './Header';
 
@@ -6,27 +6,23 @@ const Layout = () => {
   const mainRef = useRef(null);
   const location = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!mainRef.current) return;
 
-    mainRef.current.style.minHeight = `${calculateMainElementHeight()}px`;
-  }, []);
-
-  const calculateMainElementHeight = () => {
     const headerHeight = document.querySelector('header').offsetHeight;
+    const footerHeight = document.querySelector('footer')?.offsetHeight || 0;
+    const windowHeight = window.innerHeight;
+    const mainHeight = windowHeight - headerHeight - footerHeight;
 
-    const mainHeight = window.innerHeight - headerHeight;
-    if (location.pathname.includes('/auth')) {
-      const authFooterHeight = document.querySelector('footer').offsetHeight;
-      return mainHeight - authFooterHeight;
-    }
-    return mainHeight;
-  };
+    mainRef.current.style.minHeight = `${mainHeight}px`;
+  }, [ location ]);
+
+
 
   return (
     <div className='flex flex-col h-full bg-gradient-to-t from-zinc-800 to-zinc-600'>
       <Header />
-      <main ref={mainRef} className='flex flex-1 overflow-auto' >
+      <main ref={mainRef} className='flex overflow-auto h-full flex-1' >
         <Outlet />
       </main>
     </div>

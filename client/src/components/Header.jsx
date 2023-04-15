@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { getUser } from '../redux/features/user/userSlice';
 import SpinnerLoader from './SpinnerLoader';
-import SearchBar from './SearchBar';
 
 const UserMenu = lazy(() => import('./UserMenu'));
 
@@ -28,11 +27,10 @@ const Header = () => {
   };
 
   return (
-    <header className='flex w-full h-fit sm:h-1/6 justify-between items-center border-b-stone-400 mt-5'>
-      <h1 onClick={onTitleClick} className='hover:cursor-pointer ml-2 text-2xl text-white font-medium hover:text-gray-300 transition-colors duration-200'>
+    <header className='flex w-full sm:h-1/6 justify-between items-center border-b-stone-400 mt-5'>
+      <h1 onClick={onTitleClick} className='hover:cursor-pointer ml-4 text-2xl text-white font-medium hover:text-gray-300 transition-colors duration-200'>
         Meta Artists
       </h1>
-      <SearchBar />
       <ul className='flex flex-col gap-3 mr-4 sm:mr-16 sm:flex-row'>
         {user ?
           <Suspense fallback={<SpinnerLoader />}>

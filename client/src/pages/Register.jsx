@@ -4,7 +4,7 @@ import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../com
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import { registerUser } from '../api';
+import { registerUser } from '../api/auth';
 import useLogin from '../hooks/useLogin.js';
 
 const formSchema = object({
@@ -17,6 +17,7 @@ const Register = () => {
   const { register, handleSubmit, formState: { errors }, resetField, setError } = useForm({
     resolver: yupResolver(formSchema)
   });
+
 
   const login = useLogin();
 
@@ -49,7 +50,7 @@ const Register = () => {
 
   return (
     <>
-      <section id="register_form" className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto'>
+      <section id="register_form" className='flex flex-col justify-center items-center self-center h-full gap-4 mx-auto shadow-md'>
         <form onSubmit={handleSubmit((data) => registerUserMutation.mutate(data))} className="flex flex-col gap-2 px-2 w-full">
           <Input name="userName" errorMessage={errors.userName?.message} register={register("userName")} label="Username" />
           <Input name="email" errorMessage={errors.email?.message} register={register("email")} label="Email" type='email' />
@@ -58,17 +59,12 @@ const Register = () => {
         </form>
         <OrSeperator />
         <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
-          <GoogleAuthButton width={getFormWidth()} onClick={onGoogleClick} />
+          <GoogleAuthButton parentFormId="register_form" onClick={onGoogleClick} />
           <FacebookAuthButton onClick={onFacebookClick} />
         </div>
       </section>
     </>
   );
-};
-
-const getFormWidth = () => {
-  const formWidth = document.getElementById("register_form")?.offsetWidth;
-  return formWidth > 0 ? formWidth : 250;
 };
 
 

@@ -55,14 +55,11 @@ const Login = () => {
       </form>
       <OrSeperator />
       <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
-        <GoogleAuthButton width={getFormWidth()} onClick={onGoogleClick} />
+        <GoogleAuthButton parentFormId="login_form" onClick={onGoogleClick} />
         <FacebookAuthButton isSignIn onClick={onFacebookClick} />
       </div>
     </section>
   );
 };
-const getFormWidth = () => {
-  const formWidth = document.getElementById("login_form")?.offsetWidth;
-  return formWidth > 0 ? formWidth : 250;
-};
+
 export default Login;
