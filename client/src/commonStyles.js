@@ -1,0 +1,1 @@
+export const whiteText = 'text-white font-medium hover:text-gray-300 transition-colors duration-200';

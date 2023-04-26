@@ -1,13 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { HomePage, TopArtists, Artist, Login, Register } from './pages';
-import { AuthLayout, Layout, NotFoundPage } from './components';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import Settings from './pages/Settings';
-import Profile from './pages/Profile';
-import MainLayout from './components/MainLayout';
+
+import {
+  HomePage, TopArtists, ArtistPage, Login, Register,
+  NotFoundPage, CreateShowcase, Settings, Profile,
+} from './pages';
+
+import { AuthLayout, Layout, MainLayout } from './components';
 
 const queryclient = new QueryClient();
 
@@ -25,9 +26,10 @@ function App() {
             </Route>
             <Route element={<MainLayout />}>
               <Route index element={<HomePage />} />
+              <Route path='create' element={<CreateShowcase />} />
               <Route path='artists'>
                 <Route index element={<TopArtists />} />
-                <Route path=':id' element={<Artist />} />
+                <Route path=':artistId' element={<ArtistPage />} />
               </Route>
             </Route>
             <Route path='settings' element={<Settings />} />

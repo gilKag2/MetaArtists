@@ -13,3 +13,11 @@ axiosInstance.interceptors.response.use(response => {
 export const searchArtist = async (query) => {
   return await axiosInstance.get(`/searchArtist?q=${query}`);
 };;
+
+export const getArtistData = async (artistId) => {
+  return await axiosInstance.get(`/artists/${artistId}`);
+};
+
+export const getRelatedArtists = async (artistId) => {
+  return await axiosInstance.get(`/related/${artistId}`);
+};

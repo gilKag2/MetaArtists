@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import User from '../mongodb/models/user.js';
 import jwt_decode from 'jwt-decode';
 import { convertUserObject, hashPassword, validateUserPassword } from '../utils/auth.js';
 
-const router = express.Router();
+const router = Router();
 
 router.post('/register', async (req, res) => {
   const { userName, email, password } = req.body;
@@ -58,7 +58,6 @@ router.post('/googleAuth', async (req, res) => {
     return res.sendStatus(400);
   }
   const userObject = jwt_decode(token);
-  console.log(userObject);
   try {
     const existingUser = await User.findOne({ email: userObject.email });
     if (existingUser) {
@@ -73,6 +72,7 @@ router.post('/googleAuth', async (req, res) => {
     });
     res.status(201).send(convertUserObject(user, true));
   } catch (e) {
+    console.log(e);
     res.sendStatus(500);
   }
 });

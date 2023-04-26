@@ -1,48 +1,25 @@
-import { useMutation } from '@tanstack/react-query';
 import React, { useState, useEffect, useRef } from 'react';
-import { searchArtist } from '../api/spotify';
-import debounce from 'lodash/debounce';
-import ArtistSearchResult from './ArtistSearchResult';
+
+import ArtistSearchResults from './ArtistSearchResult';
 import useClickOutsideHandler from '../hooks/useClickOutsideHandler';
+import useSearchArtist from '../hooks/useSearchArtist';
 
 const SearchBar = () => {
-  const [ query, setQuery ] = useState('');
   const [ artistSearchResults, setArtistsSearchResults ] = useState([]);
   const [ showSearchResults, setShowSearchResults ] = useState(false);
 
   const searchSectionRef = useRef();
+  const searchArtist = useSearchArtist(setArtistsSearchResults);
 
   useClickOutsideHandler(searchSectionRef, () => setShowSearchResults(false));
 
-
-  const searchArtistMutation = useMutation({
-    mutationFn: async searchQuery => {
-      return await searchArtist(searchQuery);
-    },
-    onSuccess: (results) => {
-      const { data, status } = results;
-      setArtistsSearchResults(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    }
-  });
-
-  const delayedSearch = useRef(
-    debounce((searchQuery) => {
-      searchArtistMutation.mutate(searchQuery);
-    }, 500)
-  ).current;
-
-
   const handleInputChange = (event) => {
     const searchQuery = event.target.value;
-    setQuery(searchQuery);
 
     if (searchQuery.length === 0) {
       setArtistsSearchResults([]);
     } else {
-      delayedSearch(searchQuery);
+      searchArtist(searchQuery);
     }
   };
 
@@ -50,9 +27,7 @@ const SearchBar = () => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    return () => delayedSearch.cancel();
-  }, [ delayedSearch ]);
+
 
   useEffect(() => {
     if (artistSearchResults.length > 0) {
@@ -64,7 +39,7 @@ const SearchBar = () => {
 
 
   return (
-    <section ref={searchSectionRef} className='fixed top-4 left-1/2 transform -translate-x-1/2 w-1/4 max-w-[250px]' >
+    <section ref={searchSectionRef} className='fixed top-3 left-1/2 transform -translate-x-1/2 w-1/4 max-w-[250px] z-10' >
       <form role='search' onSubmit={handleSubmit} className="overflow-auto w-full rounded-full focus:outline-none border border-gray-300">
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -82,7 +57,9 @@ const SearchBar = () => {
           />
         </div>
       </form>
-      {showSearchResults && <ArtistSearchResult artistsData={artistSearchResults} />}
+      {showSearchResults && (
+        <ArtistSearchResults closeOnClick={() => setShowSearchResults(false)} artistsData={artistSearchResults} />
+      )}
     </section>
   );
 };

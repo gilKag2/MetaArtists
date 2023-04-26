@@ -22,8 +22,10 @@ const Layout = () => {
   return (
     <div className='flex flex-col h-full bg-gradient-to-t from-zinc-800 to-zinc-600'>
       <Header />
-      <main ref={mainRef} className='flex overflow-auto h-full flex-1' >
-        <Outlet />
+      <main ref={mainRef} className='flex overflow-auto flex-1 w-full pt-4'>
+        <div className='min-h-full w-full'>
+          <Outlet />
+        </div>
       </main>
     </div>
   );
