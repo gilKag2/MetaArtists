@@ -1,8 +1,8 @@
 
-import { searchArtist } from '../api/spotify';
+import { useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
+import { searchArtist } from '../api/spotify';
 
 const useSearchArtist = (setResultsCallback) => {
 
@@ -28,6 +28,7 @@ const useSearchArtist = (setResultsCallback) => {
   useEffect(() => {
     return () => delayedSearch.cancel();
   }, [ delayedSearch ]);
+
 
   return (query) => delayedSearch(query);
 };

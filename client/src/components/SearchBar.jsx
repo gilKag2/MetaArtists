@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import ArtistSearchResults from './ArtistSearchResult';
-import useClickOutsideHandler from '../hooks/useClickOutsideHandler';
 import useSearchArtist from '../hooks/useSearchArtist';
+import { useNavigate } from 'react-router-dom';
+import useClickOutsideHandler from '../hooks/useClickOutsideHandler';
 
 const SearchBar = () => {
   const [ artistSearchResults, setArtistsSearchResults ] = useState([]);
   const [ showSearchResults, setShowSearchResults ] = useState(false);
 
   const searchSectionRef = useRef();
+
   const searchArtist = useSearchArtist(setArtistsSearchResults);
 
   useClickOutsideHandler(searchSectionRef, () => setShowSearchResults(false));
+
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     const searchQuery = event.target.value;
@@ -28,7 +32,6 @@ const SearchBar = () => {
   };
 
 
-
   useEffect(() => {
     if (artistSearchResults.length > 0) {
       setShowSearchResults(true);
@@ -37,6 +40,10 @@ const SearchBar = () => {
     }
   }, [ artistSearchResults ]);
 
+  const onArtistClick = (artist) => {
+    navigate(`/artists/${artist.id}`);
+    setShowSearchResults(false);
+  };
 
   return (
     <section ref={searchSectionRef} className='fixed top-3 left-1/2 transform -translate-x-1/2 w-1/4 max-w-[250px] z-10' >
@@ -58,7 +65,7 @@ const SearchBar = () => {
         </div>
       </form>
       {showSearchResults && (
-        <ArtistSearchResults closeOnClick={() => setShowSearchResults(false)} artistsData={artistSearchResults} />
+        <ArtistSearchResults onArtistClick={onArtistClick} artistsData={artistSearchResults} />
       )}
     </section>
   );

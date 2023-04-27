@@ -8,6 +8,5 @@ import OrSeperator from "./OrSeperator";
 import SpinnerLoader from "./SpinnerLoader";
 import RelatedArtists from "./RelatedArtists";
 import MainLayout from "./MainLayout";
-
-
-export { MainLayout, FacebookAuthButton, GoogleAuthButton, Input, AuthLayout, Layout, OrSeperator, SpinnerLoader, ArtistShowcases, RelatedArtists };
+import ArtistSearchResults from "./ArtistSearchResult";
+export { MainLayout, ArtistSearchResults, FacebookAuthButton, GoogleAuthButton, Input, AuthLayout, Layout, OrSeperator, SpinnerLoader, ArtistShowcases, RelatedArtists };
