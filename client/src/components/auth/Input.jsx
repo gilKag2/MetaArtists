@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 
 const Input = ({ name, label, register, errorMessage, onChange, type = 'text', ...rest }) => {
   return (

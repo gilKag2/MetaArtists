@@ -56,7 +56,7 @@ const Login = () => {
       <OrSeperator />
       <div className='flex items-center flex-col flex-wrap gap-2 pb-2 px-2 w-full'>
         <GoogleAuthButton parentFormId="login_form" onClick={onGoogleClick} />
-        <FacebookAuthButton isSignIn onClick={onFacebookClick} />
+        {/* <FacebookAuthButton isSignIn onClick={onFacebookClick} /> */}
       </div>
     </section>
   );

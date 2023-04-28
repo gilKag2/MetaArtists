@@ -1,34 +1,27 @@
 
 import { useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { searchArtist } from '../api/spotify';
 
-const useSearchArtist = (setResultsCallback) => {
+const useSearchArtist = (setResultsCallback, queryKey, onQueryError) => {
 
-  const searchArtistMutation = useMutation({
-    mutationFn: async searchQuery => {
-      return await searchArtist(searchQuery);
-    },
-    onSuccess: (results) => {
-      const { data, status } = results;
-      setResultsCallback(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    }
+  const { refetch } = useQuery([ queryKey ], searchArtist, {
+    refetchOnWindowFocus: false,
+    enabled: false,
+    onSuccess: (data) => setResultsCallback(data),
+    onError: onQueryError,
   });
 
   const delayedSearch = useRef(
     debounce((searchQuery) => {
-      searchArtistMutation.mutate(searchQuery);
+      refetch(searchQuery);
     }, 500)
   ).current;
 
   useEffect(() => {
     return () => delayedSearch.cancel();
   }, [ delayedSearch ]);
-
 
   return (query) => delayedSearch(query);
 };

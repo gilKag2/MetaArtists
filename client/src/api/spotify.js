@@ -5,9 +5,7 @@ const axiosInstance = axios.create({
 
 });
 
-axiosInstance.interceptors.response.use(response => {
-  return { data: response.data, status: response.status };
-});
+axiosInstance.interceptors.response.use(response => response.data);
 
 
 export const searchArtist = async (query) => {

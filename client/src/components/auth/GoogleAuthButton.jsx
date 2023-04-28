@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { authWithGoogle } from '../../api/auth';
 import { useMutation } from '@tanstack/react-query';
 import useLogin from '../../hooks/useLogin.js';
+import SpinnerLoader from '../SpinnerLoader';
 
 const GoogleAuthButton = ({ parentFormId }) => {
   const login = useLogin();
@@ -23,7 +24,12 @@ const GoogleAuthButton = ({ parentFormId }) => {
       const { status, data } = responseData;
       login(data);
     },
-    onError: () => console.log('err')
+    onError: (err) => {
+      if (err.response.status === 500) {
+
+      }
+      console.log(err);
+    }
   });
 
   const onGoogleSuccess = (credentialResponse) => {
@@ -35,10 +41,10 @@ const GoogleAuthButton = ({ parentFormId }) => {
     console.log('Login Failed');
   };
 
-
+  if (googleAuthMutation.isLoading) return <SpinnerLoader />;
 
   return (
-    <div className='w-full'>
+    <div className='flex flex-col w-full items-center justify-center'>
       <GoogleLogin
         width={formWidth}
         shape='circle'
@@ -48,6 +54,7 @@ const GoogleAuthButton = ({ parentFormId }) => {
         onSuccess={onGoogleSuccess}
         onError={onGoogleError}
       />
+      {googleAuthMutation.isError && <p>Error</p>}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getArtistData } from '../api/spotify';
@@ -23,44 +23,27 @@ const ArtistDetails = ({ artistData }) => (
 );
 
 const ArtistPage = () => {
-  const [ artistData, setArtistData ] = useState(null);
   const { artistId } = useParams();
 
-  const getArtistDataMutation = useMutation({
-    mutationFn: async artistId => {
-      return await getArtistData(artistId);
-    },
-    onSuccess: (responseData) => {
-      const { data, status } = responseData;
-      setArtistData(data);
-    },
-    onError: (err) => {
-      console.log(err);
-    }
-  });
+  const { data, isLoading, isError, error } = useQuery([ `artist_id=${artistId}` ], getArtistData);
 
-  useEffect(() => {
-    if (!artistId) return;
-    getArtistDataMutation.mutate(artistId);
+  if (isLoading) return <SpinnerLoader />;
 
-  }, [ artistId ]);
+  if (isError) return <p>{error}</p>;
 
-  if (!artistData) return <p>Error...</p>;
   return (
     <>
-      {getArtistDataMutation.isLoading ? <SpinnerLoader /> : (
-        <article className='flex w-full h-full justify-between'>
-          <div className='w-1/4 h-full px-2 flex justify-center'>
-            <ArtistDetails artistData={artistData} />
-          </div>
-          <div className='p-6'>
-            <ArtistShowcases artistId={artistId} />
-          </div>
-          <div className='w-1/6 mr-2 items-center justify-center'>
-            <RelatedArtists artistId={artistId} />
-          </div>
-        </article>
-      )}
+      <article className='flex w-full h-full justify-between'>
+        <div className='w-1/4 h-full px-2 flex justify-center'>
+          <ArtistDetails artistData={data} />
+        </div>
+        <div className='p-6'>
+          <ArtistShowcases artistId={artistId} />
+        </div>
+        <div className='w-1/6 mr-2 items-center justify-center'>
+          <RelatedArtists artistId={artistId} />
+        </div>
+      </article>
     </>
   );
 };

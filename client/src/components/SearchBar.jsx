@@ -11,7 +11,7 @@ const SearchBar = () => {
 
   const searchSectionRef = useRef();
 
-  const searchArtist = useSearchArtist(setArtistsSearchResults);
+  const searchArtist = useSearchArtist(setArtistsSearchResults, 'searchBar', (error) => console.log(error));
 
   useClickOutsideHandler(searchSectionRef, () => setShowSearchResults(false));
 

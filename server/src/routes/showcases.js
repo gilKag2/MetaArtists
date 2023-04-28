@@ -19,7 +19,6 @@ const router = Router();
 
 router.get('/artist/:artistId', async (req, res) => {
   const { artistId } = req.params;
-  console.log(artistId);
   // get all artist showcases
 
   const showcases = await getShowcases(artistId);

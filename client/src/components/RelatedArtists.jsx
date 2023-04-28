@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { SpinnerLoader } from './';
 import { getRelatedArtists } from '../api/spotify';
@@ -14,43 +14,28 @@ const RelatedArtist = ({ artistData, onArtistClick }) => (
 );
 
 const RelatedArtists = ({ artistId }) => {
-  const [ relatedArtists, setRelatedArtists ] = useState([]);
 
   const navigate = useNavigate();
 
-  const getRelatedArtistMutation = useMutation({
-    mutationFn: async () => {
-      return await getRelatedArtists(artistId);
-    }, onSuccess: (responseData) => {
-      const { data, status } = responseData;
-      setRelatedArtists(data);
-    }, onError: (err) => {
-      console.log(err);
-    }
-  });
-
-  useEffect(() => {
-    if (!artistId) return;
-    getRelatedArtistMutation.mutate(artistId);
-
-  }, [ artistId ]);
+  const { data, isError, isLoading, error } = useQuery([ `related+${artistId}` ], getRelatedArtists);
 
 
   const onArtistClick = (artistId) => {
     navigate(`/artists/${artistId}`);
   };
 
+  if (isLoading) return <SpinnerLoader />;
+
+  if (isError) return <p className='text-white'>{error}</p>;
 
   return (
     <>
-      {getRelatedArtistMutation.isLoading ? <SpinnerLoader /> : (
-        <div className='gap-5 flex flex-col items-center pt-5 box-border justify-center'>
-          <p className={`${whiteText} text-lg`}>Related Artists</p>
-          {relatedArtists.map(artist => (
-            <RelatedArtist key={artist.id} artistData={artist} onArtistClick={onArtistClick} />
-          ))}
-        </div>
-      )}
+      <div className='gap-5 flex flex-col items-center pt-5 box-border justify-center'>
+        <p className={`${whiteText} text-lg`}>Related Artists</p>
+        {data.map(artist => (
+          <RelatedArtist key={artist.id} artistData={artist} onArtistClick={onArtistClick} />
+        ))}
+      </div>
     </>
   );
 };

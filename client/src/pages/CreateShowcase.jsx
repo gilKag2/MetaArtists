@@ -10,26 +10,29 @@ const CreateShowcase = () => {
   const [ artistSearchResults, setArtistSearchResults ] = useState([]);
   const [ showArtistsResults, setShowArtistsResults ] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, resetField, setError } = useForm();
+  const { register, handleSubmit, formState: { errors }, resetField, setError, setValue } = useForm();
 
   const searchArtistRef = useRef();
 
   useClickOutsideHandler(searchArtistRef, () => setShowArtistsResults(false));
 
-  const searchArtist = useSearchArtist(setArtistSearchResults);
+  const searchArtist = useSearchArtist(setArtistSearchResults, 'createShowcase', (error) => console.log(error));
+
 
   const onInputChange = (event) => {
     const searchQuery = event.target.value;
 
     if (searchQuery.length === 0) {
       setArtistSearchResults([]);
+      setSelectedArtist(null);
+
     } else {
+      setSelectedArtist(null);
       searchArtist(searchQuery);
     }
   };
 
-  const onSubmit = (data) => {
-
+  const onCreateShowcase = (data) => {
     console.log(data);
   };
 
@@ -43,14 +46,16 @@ const CreateShowcase = () => {
 
 
   const onArtistClick = (artist) => {
-    console.log(artist);
+    setSelectedArtist(artist);
+    setValue('artistName', artist.name, { shouldDirty: true });
+    setArtistSearchResults([]);
   };
 
   return (
-    <form onSubmit={handleSubmit(data => onSubmit(data))} className='flex flex-col m-auto gap-8 relative'>
-      <div ref={searchArtistRef}>
+    <form onSubmit={handleSubmit(data => onCreateShowcase(data))} className='flex flex-col m-auto gap-8 relative'>
+      <div ref={searchArtistRef} className='relative'>
+        {selectedArtist && <img src={selectedArtist.img} alt='' className='mr-2 absolute right-full top-7 object-contain h-8 w-8 rounded-full' />}
         <Input
-          disabled={selectedArtist}
           onChange={onInputChange}
           type='search'
           name="artistName"
@@ -58,17 +63,17 @@ const CreateShowcase = () => {
           register={register("artistName")}
           label="Choose Your artist:"
         />
-        {showArtistsResults && (
-          <div className='absolute left-full mt-2 ml-2'>
-            <ArtistSearchResults
-              onArtistClick={onArtistClick}
-              artistsData={artistSearchResults}
-            />
-          </div>
-        )}
       </div>
+      {showArtistsResults && (
+        <div className='absolute left-full mt-2 ml-2 w-max'>
+          <ArtistSearchResults
+            onArtistClick={onArtistClick}
+            artistsData={artistSearchResults}
+          />
+        </div>
+      )}
       <Input name="prompt" errorMessage={errors.prompt?.message} register={register("prompt")} label="Showcase topic:" />
-      <button>
+      <button type='submit'>
         Create
       </button>
     </form>
