@@ -37,7 +37,7 @@ const ArtistPage = () => {
         <div className='w-1/4 h-full px-2 flex justify-center'>
           <ArtistDetails artistData={data} />
         </div>
-        <div className='p-6'>
+        <div className='flex flex-col p-6'>
           <ArtistShowcases artistId={artistId} />
         </div>
         <div className='w-1/6 mr-2 items-center justify-center'>

@@ -10,6 +10,7 @@ const Input = ({ name, label, register, errorMessage, onChange, type = 'text', .
         {errorMessage && <span className='text-red-600 self-start'>{errorMessage}</span>}
       </div>
       <input
+        autoComplete='off'
         {...register}
         {...rest}
         type={type}

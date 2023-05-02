@@ -28,7 +28,7 @@ const SideBar = () => {
   }, [ user ]);
 
   return (
-    <aside className='flex flex-col flex-grow w-1/7 max-w-[130px] gap-5'>
+    <aside className='flex flex-col flex-grow w-1/7 max-w-[130px] gap-5 h-full'>
       {renderedLinks}
     </aside>
   );

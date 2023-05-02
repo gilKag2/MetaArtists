@@ -17,7 +17,12 @@ const RelatedArtists = ({ artistId }) => {
 
   const navigate = useNavigate();
 
-  const { data, isError, isLoading, error } = useQuery([ `related+${artistId}` ], getRelatedArtists);
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: [ `related+${artistId}` ],
+    queryFn: async () => {
+      return await getRelatedArtists(artistId);
+    }
+  });
 
 
   const onArtistClick = (artistId) => {

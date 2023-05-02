@@ -6,6 +6,7 @@ import useSearchArtist from '../hooks/useSearchArtist';
 import useClickOutsideHandler from '../hooks/useClickOutsideHandler';
 
 const CreateShowcase = () => {
+
   const [ selectedArtist, setSelectedArtist ] = useState(null);
   const [ artistSearchResults, setArtistSearchResults ] = useState([]);
   const [ showArtistsResults, setShowArtistsResults ] = useState(false);
@@ -17,6 +18,14 @@ const CreateShowcase = () => {
   useClickOutsideHandler(searchArtistRef, () => setShowArtistsResults(false));
 
   const searchArtist = useSearchArtist(setArtistSearchResults, 'createShowcase', (error) => console.log(error));
+
+  useEffect(() => {
+    if (artistSearchResults.length > 0) {
+      setShowArtistsResults(true);
+    } else {
+      setShowArtistsResults(false);
+    }
+  }, [ artistSearchResults ]);
 
 
   const onInputChange = (event) => {
@@ -32,35 +41,28 @@ const CreateShowcase = () => {
     }
   };
 
+
+
   const onCreateShowcase = (data) => {
     console.log(data);
   };
 
-  useEffect(() => {
-    if (artistSearchResults.length > 0) {
-      setShowArtistsResults(true);
-    } else {
-      setShowArtistsResults(false);
-    }
-  }, [ artistSearchResults ]);
-
-
   const onArtistClick = (artist) => {
     setSelectedArtist(artist);
-    setValue('artistName', artist.name, { shouldDirty: true });
+    setValue(formControls.artistName, artist.name, { shouldDirty: true });
     setArtistSearchResults([]);
   };
 
   return (
-    <form onSubmit={handleSubmit(data => onCreateShowcase(data))} className='flex flex-col m-auto gap-8 relative'>
+    <form onSubmit={handleSubmit(data => onCreateShowcase(data))} className='flex flex-col  m-auto gap-8 relative'>
       <div ref={searchArtistRef} className='relative'>
         {selectedArtist && <img src={selectedArtist.img} alt='' className='mr-2 absolute right-full top-7 object-contain h-8 w-8 rounded-full' />}
         <Input
           onChange={onInputChange}
           type='search'
-          name="artistName"
+          name={formControls.artistName}
           errorMessage={errors.artistName?.message}
-          register={register("artistName")}
+          register={register(formControls.artistName)}
           label="Choose Your artist:"
         />
       </div>
@@ -72,12 +74,18 @@ const CreateShowcase = () => {
           />
         </div>
       )}
-      <Input name="prompt" errorMessage={errors.prompt?.message} register={register("prompt")} label="Showcase topic:" />
-      <button type='submit'>
-        Create
+      <Input name={formControls.prompt} errorMessage={errors.prompt?.message} register={register(formControls.prompt)} label="Showcase topic:" />
+      <button type='submit' className='text-white text-center font-bold bg-none'>
+        Create Showcase
       </button>
     </form>
   );
+};
+
+
+const formControls = {
+  'artistName': 'artistName',
+  'prompt': 'prompt',
 };
 
 export default withAuth(CreateShowcase);
