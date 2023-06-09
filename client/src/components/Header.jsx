@@ -27,8 +27,8 @@ const Header = () => {
   };
 
   return (
-    <header className='flex w-full sm:h-1/6 justify-between items-center border-b-stone-400 pt-5'>
-      <h1 onClick={onTitleClick} className='hover:cursor-pointer ml-4 text-2xl text-white font-medium hover:text-gray-300 transition-colors duration-200'>
+    <header className='flex w-full sm:h-1/6 sm:justify-between justify-end items-center border-b-stone-400 pt-5'>
+      <h1 onClick={onTitleClick} className='hover:cursor-pointer sm:block hidden ml-4 text-2xl text-white font-medium hover:text-gray-300 transition-colors duration-200'>
         Meta Artists
       </h1>
       <ul className='flex flex-col gap-3 mr-4 sm:mr-16 sm:flex-row'>

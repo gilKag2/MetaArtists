@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { FacebookAuthButton, GoogleAuthButton, Input, OrSeperator } from '../components';
+import { GoogleAuthButton, Input, OrSeperator } from '../components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useMutation } from '@tanstack/react-query';

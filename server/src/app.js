@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { AuthRouter, ShowcasesRouter, SpotifyRouter } from './routes/index.js';
 import * as dotenv from 'dotenv';
+
+import { AuthRouter, ShowcasesRouter, SpotifyRouter } from './routes/index.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
@@ -19,6 +21,7 @@ app.use('/auth', AuthRouter);
 app.use('/spotify', SpotifyRouter);
 app.use('/showcases', ShowcasesRouter);
 
+app.use(errorHandler);
 
 
 export { app };

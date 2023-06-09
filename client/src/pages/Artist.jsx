@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { getArtistData } from '../api/spotify';
 import { whiteText } from '../commonStyles';
@@ -25,7 +24,10 @@ const ArtistDetails = ({ artistData }) => (
 const ArtistPage = () => {
   const { artistId } = useParams();
 
-  const { data, isLoading, isError, error } = useQuery([ `artist_id=${artistId}` ], getArtistData);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [ `artist_id=${artistId}` ],
+    queryFn: async () => await getArtistData(artistId)
+  });
 
   if (isLoading) return <SpinnerLoader />;
 

@@ -6,7 +6,7 @@ import { searchArtist } from '../api/spotify';
 
 const useSearchArtist = (setResultsCallback, queryKey, onQueryError) => {
 
-  const { refetch } = useQuery([ queryKey ], searchArtist, {
+  const { refetch: startSearch } = useQuery([ queryKey ], searchArtist, {
     refetchOnWindowFocus: false,
     enabled: false,
     onSuccess: (data) => setResultsCallback(data),
@@ -15,7 +15,7 @@ const useSearchArtist = (setResultsCallback, queryKey, onQueryError) => {
 
   const delayedSearch = useRef(
     debounce((searchQuery) => {
-      refetch(searchQuery);
+      startSearch(searchQuery);
     }, 500)
   ).current;
 

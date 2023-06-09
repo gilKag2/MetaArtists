@@ -9,5 +9,4 @@ const startServer = async (port) => {
     console.error(err);
   }
 };
-
 startServer(4000);

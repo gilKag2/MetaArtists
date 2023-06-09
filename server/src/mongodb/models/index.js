@@ -1,4 +1,3 @@
-import GoogleUser from "./google-user";
-import User from "./user";
+import User from "./user.js";
 
-export { GoogleUser, User };
+export { User };

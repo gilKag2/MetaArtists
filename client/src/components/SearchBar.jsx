@@ -57,7 +57,7 @@ const SearchBar = () => {
           <input
             type="search"
             spellCheck="false"
-            className="block w-full p-2 pl-10 text-md font-semibold text-gray-900 rounded-full"
+            className="block w-full p-2 pl-10 text-md font-semibold text-gray-900 rounded-full placeholder-transparent sm:placeholder-gray-300"
             placeholder="Search artists"
             onChange={handleInputChange}
             onClick={() => setShowSearchResults(prev => !prev)}

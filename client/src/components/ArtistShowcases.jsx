@@ -1,9 +1,7 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getArtistShowcases } from '../api/showcases';
 import { SpinnerLoader } from './';
-import { useNavigate } from 'react-router-dom';
-import { CreateShowcase } from '../pages';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Showcase = ({ showcaseData }) => {
   return (
@@ -16,8 +14,6 @@ const Showcase = ({ showcaseData }) => {
 
 const ArtistShowcases = ({ artistId }) => {
 
-  const [ isCreateMode, setIsCreateMode ] = useState(false);
-
   const { data, isError, isLoading, error } = useQuery({
     queryKey: [ `artist:${artistId}_showcases` ],
     queryFn: async () => {
@@ -26,9 +22,10 @@ const ArtistShowcases = ({ artistId }) => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onAddShowcase = () => {
-    setIsCreateMode(true);
+    navigate(`${location.pathname}/create`);
   };
 
   if (isError) return <p>{error}</p>;
@@ -37,21 +34,17 @@ const ArtistShowcases = ({ artistId }) => {
 
 
   return (
-    <>
-      {isCreateMode ? <CreateShowcase /> : (
-        <section className='flex flex-col w-full h-full gap-5'>
-          <button onClick={onAddShowcase} className='self-start font-bold text-lg text-white border rounded-lg p-2 hover:bg-slate-300 hover:text-black'>
-            + Add New Showcase
-          </button>
-          <div className='grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3'>
-            {data.map(showcase => (
-              <Showcase key={showcase.id} showcaseData={showcase} />
-            ))
-            }
-          </div>
-        </section>
-      )}
-    </>
+    <section className='flex flex-col w-full h-full gap-5'>
+      <button onClick={onAddShowcase} className='self-start font-bold text-lg text-white border rounded-lg p-2 hover:bg-slate-300 hover:text-black'>
+        + Add New Showcase
+      </button>
+      <div className='grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3'>
+        {data.map(showcase => (
+          <Showcase key={showcase.id} showcaseData={showcase} />
+        ))
+        }
+      </div>
+    </section>
   );
 };
 

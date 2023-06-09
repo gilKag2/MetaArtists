@@ -29,7 +29,10 @@ function App() {
               <Route path='create' element={<CreateShowcase />} />
               <Route path='artists'>
                 <Route index element={<TopArtists />} />
-                <Route path=':artistId' element={<ArtistPage />} />
+                <Route path=':artistId'>
+                  <Route index element={<ArtistPage />} />
+                  <Route path='create' element={<CreateShowcase />} />
+                </Route>
               </Route>
             </Route>
             <Route path='settings' element={<Settings />} />
@@ -37,7 +40,7 @@ function App() {
             <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
     </GoogleOAuthProvider>
   );
